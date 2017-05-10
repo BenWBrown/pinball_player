@@ -7,6 +7,7 @@ import autopy
 
 pinball_location = "/Users/Ben/Applications/Wineskin/Pinball.app"
 pinball_load_time = 5
+newgame_time = 7
 mouse_start = (450, 175)
 mouse_end = (110, 30)
 
@@ -27,6 +28,10 @@ def open_pinball():
         autopy.mouse.toggle(True)
         autopy.mouse.smooth_move(*mouse_end)
         autopy.mouse.toggle(False)
+
+def new_game():
+    autopy.key.tap(key.F2)
+    time.sleep(newgame_time)
 
 def open_camtwist():
     subprocess.call(["/usr/bin/open", camtwist_location])

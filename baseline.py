@@ -56,12 +56,12 @@ while(True):
     if point_in_rect(min_loc, (rect21, rect22)) and min_val < THRESHOLD:
         keypress.tap('z')
 
-    cv2.rectangle(frame, rect11, rect12, col1)
-    cv2.rectangle(frame, rect21, rect22, col2)
-    cv2.circle(frame, (starting_pos[0] + 3, starting_pos[1] + 3), 5, (0, 0, 255), 3 )
-
-
-    cv2.imshow('frame',frame)
+    # cv2.rectangle(frame, rect11, rect12, col1)
+    # cv2.rectangle(frame, rect21, rect22, col2)
+    # cv2.circle(frame, (starting_pos[0] + 3, starting_pos[1] + 3), 5, (0, 0, 255), 3 )
+    #
+    #
+    # cv2.imshow('frame',frame)
 
 
 
