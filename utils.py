@@ -25,12 +25,15 @@ def open_pinball():
         subprocess.call(["/usr/bin/open", pinball_location])
         time.sleep(pinball_load_time)
         autopy.mouse.move(*mouse_start)
+        time.sleep(.3)
         autopy.mouse.toggle(True)
         autopy.mouse.smooth_move(*mouse_end)
         autopy.mouse.toggle(False)
 
 def new_game():
-    autopy.key.tap(key.F2)
+    autopy.key.tap(autopy.key.K_RETURN)
+    time.sleep(.3)
+    autopy.key.tap(autopy.key.K_F2)
     time.sleep(newgame_time)
 
 def open_camtwist():
