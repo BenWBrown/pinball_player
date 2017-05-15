@@ -73,7 +73,7 @@ def eval_genomes(genomes, config):
                 output = net.activate(inp)
                 for index, value in enumerate(output):
                     if value > output_thresh:
-                        keypress.tap(key[index])
+                        keypress.tap(keys[index])
                 last_pos = current_pos
 
             valid_velocity = min_val < match_thresh
