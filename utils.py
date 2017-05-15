@@ -18,7 +18,7 @@ def score(frame, starting_pos):
     x, y = starting_pos
     ox, oy = 114, -187
     sx, sy = 155, 32
-    return image_to_string(Image.fromarray(frame[y+oy:y+oy+sy, x+ox:x+ox+sx]))
+    return float(image_to_string(Image.fromarray(frame[y+oy:y+oy+sy, x+ox:x+ox+sx])))
 
 def open_pinball():
     if not commands.getoutput('pgrep pinball'):

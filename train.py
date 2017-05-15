@@ -99,7 +99,7 @@ def run(config_file):
     p.add_reporter(neat.Checkpointer(5))
 
     # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 2)
+    winner = p.run(eval_genomes, 4)
 
     local_dir = os.path.dirname(__file__)
     pickle_path = os.path.join(local_dir, 'population.pickle')
