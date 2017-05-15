@@ -9,8 +9,11 @@ import pickle
 
 timeout = 60
 score_timeout = 10
-THRESHOLD = 0.075 #anything below this threshold is considered a match
+match_thresh = 0.075 #anything below this threshold is considered a match
+output_thresh = 0.95
 no_velocity = -9999999, -9999999
+
+keys = ['z', 'x', '.', '/']
 #TODO: MOVE THIS TO SOME SORT OF UTILS LIBRARY
 
 #open up the game and the camera
@@ -54,8 +57,13 @@ def eval_genomes(genomes, config):
             res = cv2.matchTemplate(frame, ball, cv2.TM_SQDIFF_NORMED)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
-            if min_val < THRESHOLD:
+            if min_val < match_thresh:
                 current_pos = min_loc
+
+                #press spacebar if the ball is ready to be launched
+                if utils.points_within_dist(current_pos, starting_pos, 5):
+                    keypress.tap(" ", 2)
+
                 if valid_velocity:
                     velocity = (current_pos[0] - last_pos[0], current_pos[1] - last_pos[1])
                 else:
@@ -63,10 +71,12 @@ def eval_genomes(genomes, config):
                 adjusted_pos = (min_loc[0] - starting_pos[0], min_loc[1] - starting_pos[1])
                 inp = adjusted_pos + velocity
                 output = net.activate(inp)
-                print output    #TODO: actually use this output to press keys
+                for index, value in enumerate(output):
+                    if value > output_thresh:
+                        keypress.tap(key[index])
                 last_pos = current_pos
 
-            valid_velocity = min_val < THRESHOLD
+            valid_velocity = min_val < match_thresh
 
 
         ret, frame = cap.read()
