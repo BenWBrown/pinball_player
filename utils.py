@@ -39,3 +39,9 @@ def new_game():
 def open_camtwist():
     subprocess.call(["/usr/bin/open", camtwist_location])
     time.sleep(camtwist_load_time)
+
+def point_in_rect(point, rect):
+    return rect[0][0] <= point[0] <= rect[1][0] and rect[0][1] <= point[1] <= rect[1][1]
+
+def points_within_dist(p1, p2, d):
+    return p1[0] - d <= p2[0] <= p1[0] + d and p1[1] - d <= p2[1] <= p1[1] + d
