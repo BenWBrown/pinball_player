@@ -15,13 +15,22 @@ $ python setup.py build
 $ python setup.py install
 """
 
+pressed_keys = {}
+
 def untoggle(key):
     autopy.key.toggle(key, False)
+    pressed_keys[key] = False
 
 def tap(key, tap_time=DEFAULT_TAP_TIME):
-    autopy.key.toggle(key, True)
-    t = Timer(tap_time, untoggle, [key])
-    t.start()
+    try:
+        pressed_keys[key]
+    except KeyError:
+        pressed_keys[key] = False
+    if not pressed_keys[key]:
+        pressed_keys[key] = True
+        autopy.key.toggle(key, True)
+        t = Timer(tap_time, untoggle, [key])
+        t.start()
 
 if __name__ == '__main__': #do some simple tests
     import time
