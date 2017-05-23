@@ -5,16 +5,23 @@ import cv2
 import time
 import keypress
 import utils
-import pickle
+import cPickle as pickle
+import pickler
+import sys
 
-timeout = 60
+timeout = 120
 score_timeout = 10
+num_generations = 35
 match_thresh = 0.075 #anything below this threshold is considered a match
 output_thresh = 0.95
 no_velocity = -9999999, -9999999
 
 keys = ['z', 'x', '.', '/']
 #TODO: MOVE THIS TO SOME SORT OF UTILS LIBRARY
+
+local_dir = os.path.dirname(__file__)
+pickle_path = os.path.join(local_dir, 'population.pickle')
+
 
 #open up the game and the camera
 utils.open_camtwist()
@@ -42,7 +49,7 @@ def eval_genomes(genomes, config):
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
         starting_pos = min_loc
 
-        print "starting location: " + str(starting_pos)
+        # print "starting location: " + str(starting_pos)
         start_time = time.time()
         last_pos = starting_pos
         valid_velocity = True
@@ -80,7 +87,9 @@ def eval_genomes(genomes, config):
 
 
         ret, frame = cap.read()
-        genome.fitness = utils.score(frame, starting_pos) #todo: divide by number of balls used
+        score = utils.score(frame, starting_pos) #todo: divide by number of balls used
+        print score
+        genome.fitness = score
 
 def run(config_file):
     # Load configuration.
@@ -89,20 +98,20 @@ def run(config_file):
                          config_file)
 
     # Create the population, which is the top-level object for a NEAT run.
-    #TODO: or load from pickle
-    p = neat.Population(config)
+    try:
+        p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-60')
+    except:
+        p = neat.Population(config)
 
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
-    p.add_reporter(neat.Checkpointer(5))
+    p.add_reporter(neat.Checkpointer(1))
 
-    # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 4)
+    # Run for up to num_generations generations.
+    winner = p.run(eval_genomes, num_generations)
 
-    local_dir = os.path.dirname(__file__)
-    pickle_path = os.path.join(local_dir, 'population.pickle')
     with open(pickle_path, 'w') as f:
         pickle.dump(p, f)
 
@@ -110,8 +119,6 @@ def run(config_file):
     # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
 
-
-    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-4') #not sure what this does yet
 
 if __name__ == "__main__":
     # Determine path to configuration file. This path manipulation is

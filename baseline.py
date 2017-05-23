@@ -4,7 +4,7 @@ import time
 import keypress
 import utils
 
-timeout = 60
+timeout = 120
 THRESHOLD = 0.075 #anything below this threshold is considered a match
 #TODO: MOVE THIS TO SOME SORT OF UTILS LIBRARY
 
@@ -45,12 +45,20 @@ rect22 = tuple([x + y for x,y in zip(rect21, size)])
 
 print "starting location: " + str(starting_pos)
 start_time = time.time()
+end_frame = None
 
 while(True):
+    t = time.time()
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
     ret, frame = cap.read()
+    if start_time + timeout < t:
+        print "time"
+        score = utils.score(frame, starting_pos) #todo: divide by number of balls used
+        print score
+        break
 
     res = cv2.matchTemplate(frame, ball, cv2.TM_SQDIFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
@@ -72,6 +80,7 @@ while(True):
     #
     #
     # cv2.imshow('frame',frame)
+
 
 
 # When everything done, release the capture

@@ -7,7 +7,7 @@ import autopy
 
 pinball_location = "/Users/Ben/Applications/Wineskin/Pinball.app"
 pinball_load_time = 5
-newgame_time = 7
+newgame_time = 8
 mouse_start = (450, 175)
 mouse_end = (110, 30)
 
@@ -18,7 +18,11 @@ def score(frame, starting_pos):
     x, y = starting_pos
     ox, oy = 114, -187
     sx, sy = 155, 32
-    return float(image_to_string(Image.fromarray(frame[y+oy:y+oy+sy, x+ox:x+ox+sx])))
+    s = image_to_string(Image.fromarray(frame[y+oy:y+oy+sy, x+ox:x+ox+sx]))
+    try:
+        return float(s)
+    except ValueError:
+        return 0.0
 
 def open_pinball():
     if not commands.getoutput('pgrep pinball'):
